@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[11]:
+
+
 import pickle
 import pandas as pd
 import numpy as np
@@ -10,7 +16,6 @@ class standardScaler():
     def transform(self, xss):
         xss = (xss-self.mean)/(self.sd)
         return(xss)
-
     
 
 with open('ans/simple.pkl', 'rb') as f:
@@ -38,6 +43,8 @@ for i in range(test_number):
     ans.iloc[i,1] = val
 ans.to_csv('ans/simple.csv',index=False)
 
+
+# In[ ]:
 
 
 
