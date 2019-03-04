@@ -17,6 +17,7 @@ def main(argv):
         print('python3 simple.py [input] [output]')
         return
 
+    ## load simple baseline data
     with open('ans/simple.pkl', 'rb') as f:
         dic = pickle.load(f)
 
@@ -33,7 +34,6 @@ def main(argv):
     total_test = []
     row, col = test.shape
     test_number = int(row/test_feature)
-    print(test_number)
     for i in range(test_number):
         df = test.iloc[i*test_feature:(i+1)*test_feature, 2:]
         xs = df.values.ravel().astype(np.float)
