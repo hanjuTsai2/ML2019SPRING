@@ -50,7 +50,7 @@ def main(argv):
         xs = np.concatenate(([1], xs))
         val = np.dot(xs,w2)
         val = round(val,0)
-        ans.append(["id_"+ str(i),val]) 
+        ans.append(["id_"+ str(i), val]) 
     ans = pd.DataFrame(ans,columns=['id', 'value'])
     ans.to_csv(outputFile ,index=False)
 
