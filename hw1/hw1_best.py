@@ -1,6 +1,7 @@
 import sys
 import pandas as pd
 import numpy as np
+from numpy import genfromtxt
 
 class standardScaler():
     def fit(self, xss):
@@ -27,7 +28,7 @@ def main(argv):
     ans = []
     
     ## read the test csv
-    test = pd.read_csv(inputFile , encoding='Big5', header=None)
+    test = pd.read_csv(inputFile , header=None)
     test = test.replace('NR', '0')
     test_feature = 18
     total_test = []
