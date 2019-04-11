@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler, TensorBoard
-from model import model_cnn, model_resnet
+from model import model_cnn, model_resnet, model_dnn
 from utils import LoadData, PARAM
 
 
@@ -47,16 +47,15 @@ reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=10,
                               verbose=0, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.001)
 
 
-
 BATCH  = PARAM.batch_size
 EPOCHS = PARAM.epochs
 
 ## define model
-models = model_resnet()
+models = model_dnn()
 models.compile(optimizer='adam',
 loss='categorical_crossentropy',
 metrics=['accuracy'])
-
+# print(models.summary())
 ## train the model 500 epochs
 train = models.fit_generator(
     train_datagen.flow((trainX, trainY), batch_size=BATCH),
