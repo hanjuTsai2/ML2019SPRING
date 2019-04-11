@@ -4,16 +4,17 @@ from keras.models import load_model
 from keras import backend as K
 import tensorflow as tf
 from keras.backend import tensorflow_backend
-
 from keras.layers.core import K
-# K.set_learning_phase(0)
+import sys
 
+K.set_learning_phase(0)
 config = tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))
 session = tf.Session(config=config)
 tensorflow_backend.set_session(session)
 
-def LoadData():
-    test = pd.read_csv('./data/test.csv')    
+def LoadData(path):
+    test = pd.read_csv(path)
+
     X = np.array(test['feature'])
     X_test = []
     for i in range(X.shape[0]):
@@ -25,45 +26,35 @@ def LoadData():
     
     return X_test
 
-X_test = LoadData()
+arg = sys.argv
+X_test = LoadData(arg[1])
+outputFile = arg[2]
 
+modellist = ['./model/0.h5', './model/8.h5', 'model/model27.h5', 
+              'model/model28.h5', 'model/model30.h5', 'model/model33.h5', 'model/model31.h5']
+weight = [ 0.67, 0.67, 0.6853, 0.68681 , 0.66, 0.679, 0.672]
+xss = X_test
 
-
-# modellist = ['model/model17-0.66.h5', 'model/model23.h5', 'model/model21-0.6853']
-modellist = ['./bag/0.h5', './bag/8.h5','model/model21-0.6853.h5']
-weight = [0.67, 0.67, 0.6853,] #[0.66 , 0.672, 0.662]
-# weight = [0.6820575627679119,
-#          0.6725045926572353,
-#          0.6750765464018257,
-#          0.6754439680472665,
-#          0.6756889159739273,
-#          0.663686466596642,
-#          0.6813065819177938,
-#          0.6777709738359959,
-#          0.6860992041162677,
-#          0.6797353590682744]
-
-# modellist = []
-# for i in range(10):
-#     modellist.append("./bag/" + str(i) + ".h5")
-# print(modellist)
-
-final = np.array([0.0] * 7178 * 7).reshape(7178,7)
-
-outfile = "vote4"
-
-for i in range(2,3):
+final = np.array([0.0] * xss.shape[0] * 7).reshape(xss.shape[0],7)
+for i in range(len(modellist)):
     model = load_model(modellist[i])
-    predict = model.predict(X_test, batch_size=128)
-    final += predict * weight[i]
+    predict = model.predict(xss)
+    final += predict * (weight[i])
+    del model
 
-final_class = []
+for cnt, i in enumerate(final):
+    final[cnt,:] = (i) / sum(i)
+    
+final[:,4] -= 0.08497144288577155
+final[:,6] -= 0.08877867735470943
+
+Y_pred = np.array([])
 for i in range(len(final)):
-    final_class.append(np.argmax(final[i]))
+    Y_pred = np.append(Y_pred, int(np.argmax(final[i])))
 
 ans = []
-for i in range(len(final_class)):
-    ans.append([i,final_class[i]])
-
+for i in range(len(Y_pred)):
+    ans.append([i,int(Y_pred[i])])
+    
 ans = pd.DataFrame(ans,columns=['id', 'label'])
-ans.to_csv('data/'+ outfile +'.csv', index=False)
+ans.to_csv(outputFile , index=False)
