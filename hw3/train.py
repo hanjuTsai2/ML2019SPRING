@@ -9,17 +9,16 @@ from utils import LoadData, PARAM
 
 arg = sys.argv
 print(len(arg))
-if len(arg) < 4:
-    print("Usage: python3 <train_data_path> <test_data_pat> <output_model_path>")
+if len(arg) < 3:
+    print("Usage: python3 <train_data_path> <output_model_path>")
     exit()
 
 train_path = arg[1]
-test_path = arg[2]
-outfile = arg[3]
+outfile = arg[2]
 
 ## preprocess data 
 ## cross validation
-X_train, Y_train, X_test = LoadData(train_path, test_path)
+X_train, Y_train = LoadData(train_path)
 validation_rate = 0.1
 index = np.int(X_train.shape[0]* (1-validation_rate))
 trainX, testX, trainY, testY = X_train[:index], X_train[index:], Y_train[:index], Y_train[index:]
