@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler, TensorBoard
-from model import model_cnn, model_resnet, model_dnn
+from model import model_cnn, model_resnet
 from utils import LoadData, PARAM
 
 
@@ -51,7 +51,7 @@ BATCH  = PARAM.batch_size
 EPOCHS = PARAM.epochs
 
 ## define model
-models = model_dnn()
+models = model_cnn()
 models.compile(optimizer='adam',
 loss='categorical_crossentropy',
 metrics=['accuracy'])

@@ -18,18 +18,7 @@ from keras.layers.advanced_activations import LeakyReLU, PReLU
 from keras.initializers import glorot_uniform
 
 from utils import PARAM
-def model_dnn():
-    model = Sequential()
-    model.add(Flatten())
-    model.add(Dense(256, input_dim=48*48, activation="relu"))
-    
-    for i in range(6):
-        model.add(Dense(256))
-        model.add(PReLU())
-        model.add(Dropout(0.5))
-    model.add(Dense(7, activation='softmax'))
-    return model
-                    
+
 def model_cnn():   
     filter_pixel = 3
     input_shape = PARAM.input_shape
