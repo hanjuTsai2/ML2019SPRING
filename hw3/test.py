@@ -37,10 +37,14 @@ xss = X_test
 
 final = np.array([0.0] * xss.shape[0] * 7).reshape(xss.shape[0],7)
 for i in range(len(modellist)):
-    model = load_model(modellist[i])
-    predict = model.predict(xss)
-    final += predict * (weight[i])
-    del model
+    print(i)
+    try:
+        model = load_model(modellist[i])
+        predict = model.predict(xss)
+        final += predict * (weight[i])
+        del model
+    except:
+        pass
 
 for cnt, i in enumerate(final):
     final[cnt,:] = (i) / sum(i)
