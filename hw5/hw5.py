@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 import keras.backend as K
-import matplotlib.pyplot as plt
 from copy import deepcopy
 from keras.applications import resnet50, vgg16, vgg19, densenet
 from keras_applications.resnet import ResNet101
