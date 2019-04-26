@@ -1,0 +1,10 @@
+python3 hw5.py 0 $1 $2
+python3 hw5.py 1 $1 $2
+python3 hw5.py 2 $1 $2
+python3 hw5.py 3 $1 $2
+python3 hw5.py 4 $1 $2
+python3 hw5.py 5 $1 $2
+python3 hw5.py 6 $1 $2
+python3 hw5.py 7 $1 $2
+python3 hw5.py 8 $1 $2
+python3 hw5.py 9 $1 $2
