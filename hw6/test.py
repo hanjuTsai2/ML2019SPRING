@@ -213,8 +213,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('jieba_lib',type=str, help='[Input] Your jieba dict.txt.big')
     parser.add_argument('test_X',type=str, help='[Input] Your train_x.csv')
+    parser.add_argument('jieba_lib',type=str, help='[Input] Your jieba dict.txt.big')
     parser.add_argument('output',type=str, help='[Input] Your output.csv')
 
     parser.add_argument('--lr', default=0.001, type=float)
