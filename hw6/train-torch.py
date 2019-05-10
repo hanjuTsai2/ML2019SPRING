@@ -84,7 +84,7 @@ class Preprocess():
         if load:
             embed = Word2Vec.load(self.save_name)
         else:
-            test_data = pd.read_csv('data/test_x.csv')['comment']
+            test_data = pd.read_csv(args.test_X)['comment']
             P = Pool(processes=4) 
             test_data = P.map(self.tokenize, test_data)
             P.close()
@@ -284,9 +284,10 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 #     parser.add_argument('model_dir', type=str, help='[Output] Your model checkpoint directory')
-    parser.add_argument('jieba_lib',type=str, help='[Input] Your jieba dict.txt.big')
     parser.add_argument('train_X',type=str, help='[Input] Your train_x.csv')
     parser.add_argument('train_Y',type=str, help='[Input] Your train_y.csv')
+    parser.add_argument('test_X',type=str, help='[Input] Your train_y.csv')
+    parser.add_argument('jieba_lib',type=str, help='[Input] Your jieba dict.txt.big')
 
     parser.add_argument('--lr', default=0.001, type=float)
     parser.add_argument('--batch', default=128, type=int)
