@@ -10,6 +10,7 @@ def process(M):
     M /= np.max(M)
     M = (M * 255).astype(np.uint8)
     return M
+
 def plot_average(mean):
     # Report 1
     average = process(mean)
@@ -28,10 +29,11 @@ def compute_ratio(num):
         print(number)
         
 def main(argv):
-    assert(len(argv)==3)
+    assert(len(argv)==4)
     IMAGE_PATH = argv[1]
     # Images for compression & reconstruction
     test_image = [argv[2]]
+    out_image = [argv[3]]
 
     # Number of principal components used
     k = 5
@@ -42,17 +44,13 @@ def main(argv):
         try:
             path = IMAGE_PATH+filename
             tmp = imread(path)  
+            img_shape = tmp.shape
             img_data.append(tmp.flatten())
-#             img = Image.open(path).convert('RGB')
-#             img = np.array(img)
-#             print(img.shape)
-#             img_data.append(img.flatten())
-#             print(path)
         except:
             pass
-    print(len(img_data))
-#         tmp = imread(path)  
-#         img_data.append(tmp.flatten())
+        
+    print("totol_image_num ", len(img_data))
+
 
     training_data = np.array(img_data).astype('float32')
     # Calculate mean & Normalize
@@ -62,7 +60,7 @@ def main(argv):
     # Use SVD to find the eigenvectors 
     u, s, v = np.linalg.svd(training_data.T, full_matrices = False)  
 
-    for x in test_image: 
+    for x, outfile in zip(test_image, out_image): 
         # Load image & Normalize
         picked_img = imread(IMAGE_PATH+x)
         X = picked_img.flatten().astype('float32') 
@@ -72,7 +70,7 @@ def main(argv):
 
         # Reconstruction
         reconstruct = process(weight.dot(u[:,:k].T) + mean)
-        imsave(x[:-4] + '_reconstruction.jpg', reconstruct.reshape(img_shape)) 
+        imsave(outfile, reconstruct.reshape(img_shape)) 
         
 if __name__ == '__main__':
     main(sys.argv)
