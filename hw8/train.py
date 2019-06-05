@@ -64,8 +64,10 @@ def adjust_learning_rate(optimizer, epoch):
         param_group['lr'] = lr
 
 def main():
-    x_train, val_data, x_label, val_label = LoadData('../hw8_data/train.csv')
-
+    x_train, val_data, x_label, val_label = LoadData(sys.argv[1])
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
+    
     data_transform = transforms.Compose([
         transforms.ToPILImage(),
         transforms.RandomResizedCrop(44),
@@ -90,7 +92,7 @@ def main():
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=8)
     val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False, num_workers=8)
 
-    model = Classifier().cuda()
+    model = Classifier().to(device)
     model.initialize_weights()
     print(model.eval())
     
@@ -113,8 +115,8 @@ def main():
         model.train()
         for i, data in enumerate(train_loader):
             optimizer.zero_grad()
-            train_pred = model(data[0].cuda())
-            batch_loss = loss(train_pred, data[1].cuda())
+            train_pred = model(data[0].to(device))
+            batch_loss = loss(train_pred, data[1].to(device))
             batch_loss.backward()
             optimizer.step()
 
@@ -128,7 +130,7 @@ def main():
         model.eval()
         for i, data in enumerate(val_loader):
             val_pred = model(data[0].cuda())
-            batch_loss = loss(val_pred, data[1].cuda())
+            batch_loss = loss(val_pred, data[1].to(device))
 
             val_acc += np.sum(np.argmax(val_pred.cpu().data.numpy(), axis=1) == data[1].numpy())
             val_loss += batch_loss.item()
@@ -145,20 +147,13 @@ def main():
         # scheduler.step(val_loss)
         if (val_acc > best_acc):
             best_acc = val_acc
-
-#             with open('save/acc.txt','r') as f:
-#                 acc = (f.read()).split('\t')[1]
-
-#             if float(acc) > val_acc:
-#                 continue
-            os.system('rm static_dict/*')
-            saving_compression(model)
-            msg = (os.system("du static_dict/ --apparent-size --bytes --max-depth=0"))
-            if int(msg.split()[0]) > 225000:
-                print(best_acc)
-                break
+            
+            if not os.path.exists("static_dict/"):
+                os.system('mkdir static_dict/')
                 
-            with open('save/acc.txt','w') as f:
+            saving_compression(model)
+            os.system("du static_dict/ --apparent-size --bytes --max-depth=0")
+            with open('acc.txt','w') as f:
                 f.write(str(epoch)+'\t'+str(val_acc)+'\t')
                     
 #             torch.save(model.state_dict(), 'save/model.pth')
